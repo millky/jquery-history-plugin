@@ -5,6 +5,7 @@
  * 
  * Copyright (c) 2006-2009 Taku Sano (Mikage Sawatari)
  * Copyright (c) 2010 Takayuki Miwa
+ * Copyright (c) 2013 DK Lee
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +32,24 @@
             (win || window).location.hash = this.encoder(hash);
         },
         get: function(win) {
-            var hash = ((win || window).location.hash).replace(/^#/, '');
+            //var hash = ((win || window).location.hash).replace(/^#/, '');
+        	var hash;
+			if (browser.msie && (browser.version == 6 || document.documentMode == 6))
+			{
+				hash = ((win || window).location.href).substring(
+						((win || window).location.href).indexOf("#") + 1,
+						(win || window).location.href.length);
+				
+				if(hash.indexOf('?') == 1)
+				{
+					hash = ((win || window).location.hash).replace(/^#/, '');
+				}
+			}
+			else
+			{
+				hash = ((win || window).location.hash).replace(/^#/, '');
+			}
+
             try {
                 return $.browser.mozilla ? hash : decodeURIComponent(hash);
             }
