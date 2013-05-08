@@ -26,6 +26,16 @@
  * THE SOFTWARE.
  */
 
+var browser = (function() {
+    var s = navigator.userAgent.toLowerCase();
+    var match = /(webkit)[ \/](\w.]+)/.exec(s) ||
+                /(opera)(?:.*version)?[ \/](\w.]+)/.exec(s) ||
+                /(msie) ([\w.]+)/.exec(s) ||
+               !/compatible/.test(s) && /(mozilla)(?:.*? rv:([\w.]+))?/.exec(s) ||
+               [];
+    return { name: match[1] || "", version: match[2] || "0" };
+}());
+
 (function($) {
     var locationWrapper = {
         put: function(hash, win) {
@@ -51,7 +61,7 @@
 			}
 
             try {
-                return $.browser.mozilla ? hash : decodeURIComponent(hash);
+                return browser.mozilla ? hash : decodeURIComponent(hash);
             }
             catch (error) {
                 return hash;
@@ -199,7 +209,7 @@
 
     var self = $.extend({}, implementations.base);
 
-    if($.browser.msie && ($.browser.version < 8 || document.documentMode < 8)) {
+    if(browser.msie && (browser.version < 8 || document.documentMode < 8)) {
         self.type = 'iframeTimer';
     } else if("onhashchange" in window) {
         self.type = 'hashchangeEvent';
